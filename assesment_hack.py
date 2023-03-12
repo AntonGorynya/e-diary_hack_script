@@ -48,12 +48,12 @@ def fix_marks(schoolkid):
 
 
 def remove_chastisements(schoolkid):
-    chastisement = Chastisement.objects.filter(schoolkid=schoolkid).delete()
+    Chastisement.objects.filter(schoolkid=schoolkid).delete()
 
 
 def create_commendation(child, subject_name):
     year_of_study = child.year_of_study
-    subject = Subject.objects.filter(title=subject_name, year_of_study=year_of_study)[0]
+    subject = Subject.objects.filter(title=subject_name, year_of_study=year_of_study).first()
     lessons = Lesson.objects.filter(subject=subject)
     lesson = random.choice(lessons)
     text = random.choice(COMMENDATIONS)
@@ -67,11 +67,11 @@ def create_commendation(child, subject_name):
 
 
 def check_child(child):
-    if len(child) == 1:
-        return child[0]
-    if not len(child):
+    if child.count() == 1:
+        return child.first()
+    if not child:
         raise ObjectDoesNotExist
-    if len(child) > 1:
+    if child.count() > 1:
         raise ToManySchoolkids
 
 
